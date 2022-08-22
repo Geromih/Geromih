@@ -1,0 +1,233 @@
+GraphicsWindow.height = 768
+GraphicsWindow.Width = 1366
+GraphicsWindow.Top =30
+GraphicsWindow.Left = 30
+GraphicsWindow.MouseMove = OnMouseMove
+GraphicsWindow.CanResize = "False"
+path = Program.directory
+nivo = 1
+Start:
+GraphicsWindow.Title = "ЖЕСТОКИЯТ КОСМОС " + " Ниво " + nivo  
+GraphicsWindow.Clear()
+image = (path+"\background2.jpg")
+final = (path+"\final.jpg")
+GraphicsWindow.DrawResizedImage(image,0,0,1366,768)
+size = 50
+rocket = (path+"\ship.png")
+dock = (path+"\docking.png")
+asteroid = (path+"\asteroid.png")
+open = (path+"\open.png")
+portal = Shapes.AddImage(open)
+Shapes.Move(portal,1010,600)
+box = shapes.AddImage(rocket)
+box1 = Shapes.addimage(dock)
+Shapes.Move(box1, 1250,600)
+Shapes.Move(box, 100,200)
+Timer.Tick = back
+Timer.Interval = 1000
+asteroid_vertical = (path+"\vertical.png")
+asteroid_horizontal = (path+"\horizontal.png")
+cd = 0
+For z = 1 To 10
+  a=5
+  b=550
+  GraphicsWindow.PenColor = "Blue"
+  wallz[z] = Shapes.addimage(asteroid_vertical)
+  Shapes.Move(wallz[1], 1366,1) 
+  Shapes.Move(wallz[2] 1,1)
+  Shapes.Move(wallz[3], 1366,1)
+  Shapes.Move(wallz[4], 1,1)
+  Shapes.Move(wallz[5], 1366,1)
+  Shapes.Move(wallz[6], 1,1)
+  Shapes.Move(wallz[7], 1366,1)
+  Shapes.Move(wallz[8],1,1)
+  Shapes.Move(wallz[9], 1366,1)
+  Shapes.Move(wallz[10], 1366,1)
+  wz_l = Shapes.GetLeft(wallz[z])
+  wz_t = Shapes.GetTop(wallz[z])
+  wz_r = wz_l+a
+  wz_d = wz_t+b
+endfor
+For m = 1 to 7
+  c = 250
+  GraphicsWindow.PenColor = "Blue"
+  wallzz[m] = Shapes.AddImage(asteroid_horizontal)
+  Shapes.Move(wallzz[1], 1366,1) 
+  Shapes.Move(wallzz[2], 1,1) 
+  Shapes.Move(wallzz[3],1366,1) 
+  Shapes.Move(wallzz[4], 1,1) 
+  Shapes.Move(wallzz[5], 1366,1) 
+  Shapes.Move(wallzz[6],1,1) 
+  Shapes.Move(wallzz[7],1366,1)
+  wzz_l = Shapes.GetLeft(wallzz[m])
+  wzz_t = Shapes.GetTop(wallzz[m])
+  wzz_r = wz_l+c
+  wzz_d = wz_t+a
+endfor
+portal_t = Shapes.GetTop(portal)
+portal_l = Shapes.GetLeft(portal)
+portal_r = portal_l + 80 
+portal_d = portal_t + 80 
+GraphicsWindow.ShowMessage("Здравейте, В тази игра, целта е, летящата чиния да се прибере в планетата си.За да се отворят пътеките, летящата чиния трябва да стигне до малката галактика.                                                               ВРЕМЕ НА ОТВОРЕНИ ПЪТЕКИ СЛЕД СТИГАНЕ ДО ГАЛАКТИКАТА- 15 СЕКУНДИ! ВНИМАНИЕ - ОЧАКВА СЕ МЕТЕОРИТЕН ДЪЖД!                                                                      Начин на игра: Посочване на мишката върху летящата чиния и тя залепва за курсора ви! Успех!", "ЖЕСТОКИЯТ КОСМОС")
+Program.Delay(1000)
+asteroid_1 = Shapes.AddImage(asteroid)
+asteroid_2 = Shapes.AddImage(asteroid)
+a_1x = 1386
+a_1y = Math.GetRandomNumber(600)
+a_2x = 1386
+a_2y = Math.GetRandomNumber(600)
+
+b1_l = Shapes.GetLeft(box1)
+b1_t = Shapes.GetTop(box1)
+b1_r = b1_l+size*2
+b1_d = b1_t+size*2
+MouseMove = "False"
+While "True"
+  Shapes.Move(asteroid_1,a_1x,a_1y)
+  Shapes.Move(asteroid_2,a_2x,a_2y)
+  If a_1x < GraphicsWindow.Width - 1386 then
+    a_1x = 1386
+    a_1y=math.GetRandomNumber(600)
+  EndIf
+  a_1x = a_1x - Math.GetRandomNumber(15) 
+  If a_2x < GraphicsWindow.Width - 1386 then
+    a_2x = 1386
+    a_2y=math.GetRandomNumber(600)
+  EndIf
+  a_2x = a_2x - Math.GetRandomNumber(30)
+  Program.Delay(10)
+  b_l = Shapes.GetLeft(box)
+  b_l = b_l+6
+  b_t = Shapes.GetTop(box)
+  b_t = b_t+10
+  b_r = b_l+40
+  b_d = b_t+20
+  If b_r>=b1_l and b_l<= b1_r and b_d>= b1_t and b_t<=b1_d then 
+    Sound.Play(path+"\landing.mp3")
+    GraphicsWindow.Clear()
+    GraphicsWindow.DrawResizedImage(Final,0,0,1366,768)
+    Program.Delay(3000)
+    GraphicsWindow.ShowMessage("Извънземното човече се прибра вкъщи! :)", "Браво!!!")
+    cd = 0
+    Sound.Stop(path+"\landing.mp3")
+    nivo = nivo + 1
+    cd = cd - 3
+    TextWindow.Write("Желаете ли още една игра на следващото ниво? Y/N ")
+    otgovor =  TextWindow.Read()
+    If otgovor = "n" then 
+      Program.End()
+      TextWindow.Hide()
+    ElseIf otgovor = "y"then
+      Goto Start
+      TextWindow.Hide()
+    EndIf 
+  EndIf
+  nivo = nivo
+  If b_r>=portal_l and b_l<= portal_r and b_d>= portal_t and b_t<=portal_d then 
+    Sound.PlayAndWait (path+"\gate.mp3")
+    If nivo = 1 then
+      cd = 15
+      moving()
+    ElseIf nivo = 2 then 
+      cd = 10
+      moving()
+    ElseIf nivo = 3 then
+      cd = 5
+      moving()
+    endif
+  EndIf
+  a1_l = Shapes.GetLeft(asteroid_1)
+  a1_t = Shapes.GetTop(asteroid_1)
+  a1_r = a1_l+15
+  a1_d = a1_t+15
+  a2_l = Shapes.GetLeft(asteroid_2)
+  a2_t = Shapes.GetTop(asteroid_2)
+  a2_r = a2_l+15
+  a2_d = a2_t+15
+  if b_r>=a1_l And b_l<= a1_r and b_d>= a1_t and b_t<=a1_d Then
+    explosion()
+    Goto  Start
+  Endif
+  if b_r>=a2_l And b_l<= a2_r and b_d>= a2_t and b_t<=a2_d Then
+    explosion()
+    Goto  Start
+  Endif
+  For z = 1 to 10
+    wz_l = Shapes.GetLeft(wallz[z])
+    wz_t = Shapes.GetTop(wallz[z])
+    wz_r = wz_l+a
+    wz_d = wz_t+b
+    If b_r>=wz_l and b_l<= wz_r and b_d>= wz_t and b_t<=wz_d Then
+      explosion()
+      Goto Start
+    EndIf
+  endfor  
+  For m = 1 to 7
+    wzz_l = Shapes.GetLeft(wallzz[m])
+    wzz_t = Shapes.GetTop(wallzz[m])
+    wzz_r = wzz_l+c
+    wzz_d = wzz_t+a
+    If b_r>=wzz_l and b_l<= wzz_r and b_d>= wzz_t and b_t<=wzz_d Then
+      explosion()
+      Goto Start
+    EndIf
+  endfor 
+EndWhile
+Sub OnMouseMove
+  MouseMove = "True"
+  If MouseMove  Then  
+    x = GraphicsWindow.MouseX
+    y = GraphicsWindow.MouseY
+    b_l = Shapes.GetLeft(box)
+    b_t = Shapes.GetTop(box)
+    b_r = b_l+50
+    b_d = b_t+50
+    If x>=b_l and x<= b_r and y>= b_t and y<=b_d  then 
+      Shapes.Move(box, x- 50/2,y-50/2)  
+      MouseMove = "False"
+    EndIf      
+  Endif
+EndSub
+Sub moving 
+  Shapes.Animate(wallz[2] 380,150,600)
+  Shapes.Animate(wallzz[1], 220,1,600)
+  Shapes.Animate(wallz[5], 550,150,600)
+  Shapes.Animate(wallz[4], 650,150,600)
+  Shapes.Animate(wallz[10], 1200,1,600)
+  Shapes.animate(wallzz[7],1200,500,600)
+  back()
+endsub
+Sub back
+  Timer.Pause()
+  If cd >= 1 Then
+    cd = cd - 1  
+    Sound.PlayClick()
+    GraphicsWindow.Title = "ОТВОРЕНИ ПОТОЦИ още: " + cd + " СЕКУНДИ! ПО- БЪРЗО!!!" 
+  else
+    Shapes.Animate(wallz[1], 290,70,600) 
+    Shapes.Animate(wallz[2] 380,200,600)
+    Shapes.Animate(wallz[3], 470,1,600)
+    Shapes.Animate(wallz[4], 650,80,600)
+    Shapes.Animate(wallz[5], 550,150,600)
+    Shapes.Animate(wallz[6], 750,250,600)
+    Shapes.Animate(wallz[7], 1100,150,600)
+    Shapes.Animate(wallz[8], 1000,250,600)
+    Shapes.Animate(wallz[9], 1200,1,600)
+    Shapes.Animate(wallz[10], 1200,150,600)
+    Shapes.Animate(wallzz[1], 400,70,600) 
+    Shapes.Animate(wallzz[2], 400,700,600) 
+    Shapes.Animate(wallzz[3], 650,150,600) 
+    Shapes.Animate(wallzz[4], 750,250,600) 
+    Shapes.Animate(wallzz[5], 850,150,600) 
+    Shapes.Animate(wallzz[6], 1000,700,600)
+    Shapes.Animate(wallzz[7],1100,500,600) 
+  endif
+  Timer.Resume()
+EndSub
+Sub explosion
+  Shapes.Remove(box)
+  Sound.Play(path+"\boom.mp3")
+  GraphicsWindow.ShowMessage("Не така!!!", "ОПА")
+  Sound.stop(path+"\boom.mp3")
+endsub
+
